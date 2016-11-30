@@ -1,0 +1,33 @@
+#blacklistgrid tr td{
+    width:100px;
+    border: solid 1px black;
+    max-width: 100px;
+    max-height: 50px;
+    height: 50px;
+}
+
+#tab  tr  td {
+    width:50px;
+    max-width: 50px;
+    max-height: 50px;
+    height: 50px;
+    text-align: center;
+}
+
+
+.space {
+    padding-right: 75px;
+}
+
+#tab{
+    width: 50px;
+    display: inline-table;
+}
+
+#blacklistgrid{
+    display: inline-table;
+}
+
+html{
+    width: 1000000000000px;
+}
