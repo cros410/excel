@@ -13,21 +13,32 @@
     height: 50px;
     text-align: center;
 }
+th{
+    text-align: center;
+    border: solid 1px black !important;    
+}
+
+td{
+    text-align: center;
+}
 
 
 .space {
     padding-right: 75px;
 }
 
-#tab{
-    width: 50px;
-    display: inline-table;
+.num{
+    width: 50px !important;
+}
+
+.excel{
+    width: 10000px;
+    height: 90vh;
+    overflow: scroll;
 }
 
 #blacklistgrid{
-    display: inline-table;
+    display: inline-block;
+    
 }
 
-html{
-    width: 1000000000000px;
-}

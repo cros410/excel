@@ -4,19 +4,29 @@ $(document).ready(function () {
     var cols = 1;
     var fila = 1;
     var data = [];
-
-
     $('#btnAdd').click(function () {
         var count = 1;
         var first_row = $('#Row2');
         fila++;
-        addNumOfCel();
         while (count-- > 0) {
             var newcel = first_row.clone()
                     .find("td").html("").end();
             newcel.appendTo('#blacklistgrid');
         }
+        addNumFila();
     });
+
+    function addNumFila() {
+        $("#blacklistgrid tr").each(function (index) {
+            if (index !== 0) {
+                $(this).children("td").each(function (index2) {
+                    if (index2 === 0) {
+                        $(this).html(index);
+                    }
+                });
+            }
+        });
+    }
 
     $('#btnAddCol').click(function () {
         cols++;
@@ -34,12 +44,13 @@ $(document).ready(function () {
             if (index !== 0) {
                 var posh = index;
                 $(this).children("td").each(function (index2) {
-                    var posv = index2+1;
-                    if($(this).html()===""){
-                        console.log("valor : vacio ");
-                    }else{
-                        console.log("valor : " + $(this).html());
-                        data.push({pos:posh+"/"+posv,val:$(this).html()});
+                    var posv = index2;
+                    if (index2 !== 0) {
+                        if ($(this).html() === "") {
+                            console.log("valor : vacio ");
+                        } else {
+                            data.push({pos: posh + "/" + posv, val: $(this).html()});
+                        }
                     }
                 });
             }
@@ -50,18 +61,12 @@ $(document).ready(function () {
     $('#btnsave').click(function () {
         console.log(cols);
         console.log(fila);
-        for(var i = 0 ; i < data.length ; i++){
+        for (var i = 0; i < data.length; i++) {
             console.log(data[i].pos);
             console.log(data[i].val);
         }
     });
 
-    function addNumOfCel() {
-        var new_r2 = $("#r2");
-        var new_cel = new_r2.clone()
-                .find("td").html(fila).end();
-        new_cel.appendTo('#tab');
-    }
 
     function getCabecera() {
         var num = Math.trunc(cols / 26);

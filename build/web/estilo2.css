@@ -31,14 +31,9 @@ td{
     width: 50px !important;
 }
 
-.excel{
-    width: 10000px;
-    height: 90vh;
-    overflow: scroll;
-}
-
-#blacklistgrid{
-    display: inline-block;
-    
+body{
+    width: 100000px;
+    overflow: auto;
+    margin-top: 54px;
 }
 
