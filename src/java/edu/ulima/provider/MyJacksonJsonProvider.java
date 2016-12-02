@@ -6,10 +6,6 @@ import javax.ws.rs.ext.Provider;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.ejb.Singleton;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 
 
@@ -22,8 +18,6 @@ public class MyJacksonJsonProvider implements ContextResolver<ObjectMapper> {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     
     static {
-      MAPPER.setSerializationInclusion(Include.NON_EMPTY);
-      MAPPER.disable(MapperFeature.USE_GETTERS_AS_SETTERS);
       //MAPPER.disable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
     }
  
