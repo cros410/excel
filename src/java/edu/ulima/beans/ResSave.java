@@ -5,14 +5,11 @@
  */
 package edu.ulima.beans;
 
-/**
- *
- * @author cvalencia
- */
+
 public class ResSave {
     private int cod;
     private String msg;
-
+   
     public ResSave() {
     }
 
@@ -31,6 +28,8 @@ public class ResSave {
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
     
+     
     
 }

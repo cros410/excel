@@ -5,7 +5,6 @@
  */
 package edu.ulima.beans;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import edu.ulima.dao.ServiceDAO;
 import edu.ulima.interfaces.ServiceIF;
 import java.util.List;
@@ -13,10 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 
-/**
- *
- * @author mbernedo
- */
 public class Test {
 
     /**

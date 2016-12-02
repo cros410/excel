@@ -9,12 +9,12 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import edu.ulima.beans.Documento;
+import edu.ulima.beans.ReqSave;
 import edu.ulima.beans.Usuario;
 import edu.ulima.interfaces.ServiceIF;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.text.Document;
 
 public class ServiceDAO implements ServiceIF {
 
@@ -57,12 +57,15 @@ public class ServiceDAO implements ServiceIF {
     }
 
     @Override
-    public void SaveDoc(String cadena, String usuario) {
+    public void SaveDoc(ReqSave reqsave) {
         db = getConnection();
         DBCollection coll = db.getCollection("usuarios");
-        BasicDBObject filtro = new BasicDBObject("user", usuario);
-        DBObject item = new BasicDBObject("docs", new BasicDBObject("cod", "3").append("cadena", cadena));
-        DBObject updateQuery = new BasicDBObject("$push", item).append("$set", new BasicDBObject().append("cont", 1));;
+        BasicDBObject filtro = new BasicDBObject("user", reqsave.getUsuario());
+        DBObject item = new BasicDBObject("docs", new BasicDBObject("cadena", reqsave.getCadena())
+                .append("col", reqsave.getCol())
+                .append("fila", reqsave.getFila())
+                .append("nombre", reqsave.getNombre()));
+        DBObject updateQuery = new BasicDBObject("$push", item);
         coll.update(filtro, updateQuery);
         mongoClient.close();
     }
@@ -73,7 +76,6 @@ public class ServiceDAO implements ServiceIF {
         DBCollection coll = db.getCollection("usuarios");
         BasicDBObject doc = new BasicDBObject("name", username)
                 .append("pwd", pwd)
-                .append("cont", 0)
                 .append("docs", new ArrayList<>());
 
         coll.insert(doc);
@@ -97,18 +99,15 @@ public class ServiceDAO implements ServiceIF {
             BasicDBList lights = (BasicDBList) o.get("docs");
             BasicDBObject[] lightArr = lights.toArray(new BasicDBObject[0]);
             for (BasicDBObject dbObj : lightArr) {
-                // shows each item from the lights array
                 doc = new Documento();
-                doc.setCod((int) dbObj.get("cod"));
                 doc.setCadena((String) dbObj.get("cadena"));
+                doc.setCol((int) dbObj.get("col"));
+                doc.setFila((int) dbObj.get("fila"));
+                doc.setNombre((String) dbObj.get("nombre"));
                 docs.add(doc);
             }
         }
 
-        /*user = new Usuario();
-        user.setUsuario((String) obj.get("user"));
-        user.setDocs((List<Documento>) obj.get("docs"));
-        mongoClient.close();*/
         return docs;
 
     }

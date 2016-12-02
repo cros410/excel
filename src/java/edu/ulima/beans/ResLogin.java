@@ -1,10 +1,7 @@
 
 package edu.ulima.beans;
 
-/**
- *
- * @author mbernedo
- */
+
 public class ResLogin {
    
     private int cod;

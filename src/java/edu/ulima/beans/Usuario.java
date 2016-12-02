@@ -2,10 +2,7 @@ package edu.ulima.beans;
 
 import java.util.List;
 
-/**
- *
- * @author mbernedo
- */
+
 public class Usuario {
 
     private String usuario;

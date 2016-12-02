@@ -5,15 +5,14 @@
  */
 package edu.ulima.beans;
 
-/**
- *
- * @author cvalencia
- */
+
 public class Documento {
     
     private String cadena;
-    private int cod;
-
+    private int col;
+    private int fila;
+    private String nombre;
+           
     public Documento() {
     }
 
@@ -25,13 +24,31 @@ public class Documento {
         this.cadena = cadena;
     }
 
-    public int getCod() {
-        return cod;
+    public int getCol() {
+        return col;
     }
 
-    public void setCod(int cod) {
-        this.cod = cod;
+    public void setCol(int col) {
+        this.col = col;
     }
+
+    public int getFila() {
+        return fila;
+    }
+
+    public void setFila(int fila) {
+        this.fila = fila;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    
     
     
     

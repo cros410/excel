@@ -2,7 +2,7 @@
 
 var cols = 1;
 var fila = 1;
-var data = [];
+var data = "";
 
 function addNumFila() {
     $("#blacklistgrid tr").each(function (index) {
@@ -24,7 +24,11 @@ $('#btnAdd').click(function () {
     addFila();
 });
 
-$('#btnrun').click(function () {
+
+
+
+function getData() {
+    data = "";
     $("#blacklistgrid tr").each(function (index) {
         if (index !== 0) {
             var posh = index;
@@ -34,18 +38,18 @@ $('#btnrun').click(function () {
                     if ($(this).html() === "") {
                         console.log("valor : vacio ");
                     } else {
-                        data.push({pos: posh + "/" + posv, val: $(this).html()});
+                        console.log($(this).html());
+                        data = data + "&" + posh + "/" + posv + "%" + $(this).html();
+
                     }
                 }
             });
         }
     });
-});
+}
+;
 
-$('#btnopen').click(function () {
-    var c = 15;
-    var f = 15;
-    var cadena = "1/1%123&1/2%124&1/3%125";
+function opeen(c, f, cadena) {
     $("#blacklistgrid").html("");
     armarTabla(c, f);
     var res = getInfo(cadena);
@@ -63,11 +67,8 @@ $('#btnopen').click(function () {
             });
         }
     });
-
-
-
-
-});
+}
+;
 
 function isInArray(pos, array) {
     var is = false;
@@ -99,10 +100,21 @@ function getInfo(cadena) {
 }
 
 function armarTabla(co, fi) {
-    var base = '<tr id="Row1"><th>#</th><th>A</th></tr><tr id="Row2"><td class="celda" class="num">1</td><td contenteditable="true" ></td></tr>';
+    var base = '<tr id="Row1"><th>#</th><th>A</th></tr><tr id="Row2"><td  class="num">1</td><td class="celda" contenteditable="true" ></td></tr>';
     $("#blacklistgrid").html(base);
     cols = 1;
     fila = 1;
+
+    $(".celda").bind('keypress', function (e) {
+        if (e.keyCode === 13) {
+            sumar($(this).html(), $(this));
+            return false;
+        } else {
+            return true;
+        }
+
+    });
+
     for (var i = 1; i < co; i++) {
         addCol();
     }
@@ -142,14 +154,44 @@ function addCol() {
     });
 }
 
+
 $('#btnsave').click(function () {
-    console.log(cols);
-    console.log(fila);
-    for (var i = 0; i < data.length; i++) {
-        console.log(data[i].pos);
-        console.log(data[i].val);
-    }
+    $('#myModal4').modal('show');
 });
+
+
+$('#gdoc').click(function () {
+    var nbd = $("#nomdoc").val();
+    var usr = localStorage.getItem('usuario');
+    var cl = cols;
+    var fl = fila;
+    getData();
+    setTimeout(function () {
+        var cad = data.substr(1, data.length);
+        var info =
+                {
+                    "cadena": cad,
+                    "col": cl,
+                    "fila":fl,
+                    "nombre":nbd,
+                    "usuario":usr
+                };
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/excel/service/excelweb/saveDoc",
+            processData: false,
+            contentType: 'application/json',
+            data: JSON.stringify(info),
+            success: function (r) {
+                $('#myModal4').modal('hide');
+                location.reload();
+            }});
+
+    }, 3000);
+
+});
+
+
 
 function getCabecera() {
     var num = Math.trunc(cols / 26);
@@ -177,7 +219,160 @@ function getForCha(num) {
     return String.fromCharCode(97 + (num - 1));
 }
 
-$('.celda').click(function () {
-    console.log("$focused");
+$(".celda").bind('keypress', function (e) {
+    if (e.keyCode === 13) {
+
+        sumar($(this).html(), $(this));
+        return false;
+    } else {
+        return true;
+    }
+
 });
+
+function sumar(rango, cel) {
+    var res = validarFuncion(rango);
+    var suma = 0;
+    var err = false;
+    if (res.cod !== 1) {
+        console.log("No es una funcion");
+    } else {
+        console.log("Desde : " + res.vals[0] + " / " + res.vals[1]);
+        console.log("Hasta : " + res.vals[2] + " / " + res.vals[3]);
+        console.log("cols " + cols);
+        console.log("final " + fila);
+
+        if ((res.vals[0] + 1) <= cols && (res.vals[2] + 1) <= cols) {
+            if ((res.vals[1]) <= fila && (res.vals[3]) <= fila) {
+                $("#blacklistgrid tr").each(function (index) {
+                    if (index !== 0) {
+                        var posh = index;
+                        $(this).children("td").each(function (index2) {
+                            var posv = index2;
+                            if (index2 !== 0) {
+                                if (index2 !== 0) {
+                                    if (posv >= (res.vals[0] + 1) && posv <= (res.vals[2] + 1)
+                                            && (posh >= res.vals[1]) && (posh <= res.vals[3])) {
+                                        if ($(this).html() !== "") {
+                                            console.log($(this).html());
+                                            if (err === false) {
+                                                if (isNumber($(this).html())) {
+                                                    suma = suma + Number($(this).html());
+                                                    console.log(suma);
+                                                    cel.html(suma);
+
+                                                } else {
+                                                    alert("#ERROR");
+                                                    cel.html("#ERROR");
+                                                    err = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                alert("rango no valido");
+            }
+        } else {
+            alert("rango no valido");
+        }
+    }
+}
+
+function validarFuncion(func) {
+    var res = {"cod": 0, "vals": []};
+
+    if (func.substr(0, 1) === "=") {
+        if (func.substr(1, 5) === "sumar") {
+            if (func.substr(9, 1) === ":") {
+                var r1 = func.substr(7, 2);
+                var r2 = func.substr(10, 2);
+                var r11 = r1.substr(0, 1).toLowerCase();
+                var r12 = r1.substr(1, 2);
+                var r21 = r2.substr(0, 1).toLowerCase();
+                var r22 = r2.substr(1, 2);
+                res.cod = 1;
+                res.vals.push(getPosFromLetra(r11));
+                res.vals.push(r12);
+                res.vals.push(getPosFromLetra(r21));
+                res.vals.push(r22);
+                return res;
+            } else {
+                return res;
+            }
+        } else {
+            return res;
+        }
+    } else {
+        return res;
+    }
+
+}
+
+function isNumber(val) {
+    return !isNaN(val);
+}
+
+function getPosFromLetra(letra) {
+    return (letra.charCodeAt(0) - 97);
+}
+
+$('#btnsumar').click(function () {
+    $('#myModal').modal('show');
+});
+
+$('#btnsomos').click(function () {
+    $('#myModal2').modal('show');
+});
+
+
+$('#btnabrir').click(function () {
+
+    var user = localStorage.getItem('usuario');
+    var info =
+            {
+                "usuario": user
+            };
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/excel/service/excelweb/getDocusUser",
+        processData: false,
+        contentType: 'application/json',
+        data: JSON.stringify(info),
+        success: function (r) {
+            console.log("llego");
+            $("#docus").html("");
+            for (var i = 0; i < r.length; i++) {
+                console.log(r);
+                var dc =
+                        '<div class="col-md-12" style="margin-top: 20px;" >' +
+                        '<label style="margin-right: 30px;" >' + r[i].nombre + '</label>' +
+                        '<a style="color: white" col=' + r[i].col + ' fila=' + r[i].fila + ' cadena=' + r[i].cadena + ' class="btn btn-primary hrabri" id="' + r[i].nombre + '"> Abrir </a>' +
+                        '</div>';
+
+                $(dc).appendTo("#docus");
+
+                $("#" + r[i].nombre).bind('click', function (e) {
+                    console.log("c: " + $(this).attr("col"));
+                    console.log("f: " + $(this).attr("fila"));
+                    console.log("cad: " + $(this).attr("cadena"));
+                    $('#myModal3').modal('hide');
+                    opeen($(this).attr("col"), $(this).attr("fila"), $(this).attr("cadena"));
+
+                });
+                if (i === (r.length - 1)) {
+
+                    $('#myModal3').modal('show');
+                }
+            }
+
+        }});
+
+
+});
+
 

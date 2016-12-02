@@ -5,10 +5,7 @@
  */
 package edu.ulima.beans;
 
-/**
- *
- * @author cvalencia
- */
+
 public class ResReg {
     
     private int cod;

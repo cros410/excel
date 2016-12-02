@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-/**
- *
- * @author cvalencia
- */
+
 public class ReqSave {
     
     private String cadena;
+    private int col;
+    private int fila;
+    private String nombre;
     private String usuario;
 
     public ReqSave() {
@@ -35,6 +35,30 @@ public class ReqSave {
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
+
+    public int getFila() {
+        return fila;
+    }
+
+    public void setFila(int fila) {
+        this.fila = fila;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
     
     
