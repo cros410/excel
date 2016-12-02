@@ -24,7 +24,8 @@ public class ServiceDAO implements ServiceIF {
     private DB getConnection() {
         try {
             mongoClient = new MongoClient(
-                    new MongoClientURI("mongodb://excel:excel@ds113628.mlab.com:13628/excelweb")
+                    new MongoClientURI("mongodb://excel:excel@ds119578.mlab.com:19578/excelweb")
+                    
             );
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
@@ -40,6 +41,8 @@ public class ServiceDAO implements ServiceIF {
         db = getConnection();
         DBCursor cursor;
         DBCollection coll = db.getCollection("usuarios");
+        System.out.println(user);
+        System.out.println(pwd);
         BasicDBObject query = new BasicDBObject();
         Usuario u = null;
         query.put("user", user);
@@ -74,7 +77,7 @@ public class ServiceDAO implements ServiceIF {
     public void SaveUser(String username, String pwd) {
         db = getConnection();
         DBCollection coll = db.getCollection("usuarios");
-        BasicDBObject doc = new BasicDBObject("name", username)
+        BasicDBObject doc = new BasicDBObject("user", username)
                 .append("pwd", pwd)
                 .append("docs", new ArrayList<>());
 

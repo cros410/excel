@@ -44,8 +44,7 @@ $(document).ready(function () {
             data: JSON.stringify(info),
             success: function (r) {
                 if (r.cod === 1) {
-                    localStorage.setItem("usuario", r.user.usuario);
-                    window.location.href = "excel.jsp";
+                    window.location.href = "index.jsp";
                 } else {
                     alert("Usuario no registrado");
                 }
